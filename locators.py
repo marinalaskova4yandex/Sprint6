@@ -29,10 +29,10 @@ class RentPageLocators:
     """ГРУППА 3: Локаторы второй страницы формы ('Про аренду')"""
     DATE_FIELD = (By.XPATH, '//input[@placeholder="* Когда привезти самокат"]')
 
-    # ИСПРАВЛЕНО СТРОГО ПО DevTools: Нажимаем на саму область управления, которая открывает список
+    # Нажимаем на саму область управления, которая открывает список
     DURATION_FIELD = (By.XPATH, "//div[@class='Dropdown-control']")
 
-    # ИСПРАВЛЕНО СТРОГО ПО DevTools: Ищем опции внутри раскрытого меню Dropdown-menu строго с маленькой буквы
+    # Ищем опции внутри раскрытого меню Dropdown-menu строго с маленькой буквы
     DURATION_ONE_DAY = (By.XPATH, "//div[@class='Dropdown-menu']//div[text()='сутки']")
     DURATION_TWO_DAYS = (By.XPATH, "//div[@class='Dropdown-menu']//div[text()='двое суток']")
     DURATION_THREE_DAYS = (By.XPATH, "//div[@class='Dropdown-menu']//div[text()='трое суток']")

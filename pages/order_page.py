@@ -2,7 +2,6 @@ import allure
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
-# ИСПРАВЛЕНО: Импортируем правильный класс OrderLocators
 from locators import OrderLocators
 
 class OrderPage(BasePage):

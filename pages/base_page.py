@@ -37,7 +37,7 @@ class BasePage:
     
     @allure.step('Нажать на элемент по локатору: {locator}')
     def click_element(self, locator):
-        # Самое стабильное решение: ждем присутствия и кликаем через JS
+        # Ждем присутствия и кликаем через JS
         element = self.wait.until(EC.presence_of_element_located(locator))
         self.driver.execute_script("arguments[0].click();", element)
 
@@ -68,8 +68,7 @@ class BasePage:
     def get_current_url(self):
         return self.driver.current_url
 
-    # ================= ДОПИСАННЫЕ МЕТОДЫ, КОТОРЫХ НЕ ХВАТАЛО =================
-
+    
     @allure.step('Ожидать появления части url')
     def wait_url_contains(self, url_part):
         """Ожидает, пока текущий URL-адрес браузера будет содержать указанную строку."""

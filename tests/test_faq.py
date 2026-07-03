@@ -2,11 +2,11 @@ import pytest
 import allure
 from pages.main_page import MainPage
 
-@allure.suite("Спринт 6: Проверка выпадающих списков FAQ")
-class TestMainPageFaq:
+@allure.suite("Спринт 6: Проверка главной страницы сервиса «Самокат»")
+class TestMainPage:
 
     @allure.title("Тест FAQ: Вопрос и ответ № {index}")
-    @allure.description("Проверяем, что при клике на стрелочку, текст ответа раскрывается плавно и совпадает с эталоном")
+    @allure.description("Проверяем, что при клике на стрелочку текст ответа раскрывается и совпадает с эталоном")
     @pytest.mark.parametrize(
         "index, expected_answer",
         [
@@ -31,3 +31,5 @@ class TestMainPageFaq:
         assert actual_answer == expected_answer, (
             f"Ошибка на индексе {index}!\nОжидали: '{expected_answer}'\nПолучили: '{actual_answer}'"
         )
+
+    
