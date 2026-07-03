@@ -1,0 +1,27 @@
+# Виртуальное окружение Python
+venv/
+.venv/
+env/
+
+# Кэш Python и байт-код
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Кэш тестового фреймворка pytest
+.pytest_cache/
+.cache/
+
+# Локальные директории IDE (PyCharm, VS Code)
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Локальные логи и отчеты
+*.log
+pip-log.txt
