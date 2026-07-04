@@ -13,6 +13,8 @@ class MainPageLocators:
     QUESTIONS = [(By.ID, f"accordion__heading-{i}") for i in range(8)]
     ANSWERS = [(By.ID, f"accordion__panel-{i}") for i in range(8)]
 
+    YANDEX_LOGO_IMAGE = (By.CSS_SELECTOR, "img[alt='Yandex']")
+
 
 class OrderLocators:
     """ГРУППА 2: Локаторы первой страницы формы ('Для кого самокат')"""
@@ -30,7 +32,8 @@ class RentPageLocators:
     DATE_FIELD = (By.XPATH, '//input[@placeholder="* Когда привезти самокат"]')
 
     # Нажимаем на саму область управления, которая открывает список
-    DURATION_FIELD = (By.XPATH, "//div[@class='Dropdown-control']")
+   #DURATION_FIELD = (By.XPATH, "//div[@class='Dropdown-control']")
+    DURATION_FIELD = (By.CLASS_NAME, "Dropdown-control")
 
     # Ищем опции внутри раскрытого меню Dropdown-menu строго с маленькой буквы
     DURATION_ONE_DAY = (By.XPATH, "//div[@class='Dropdown-menu']//div[text()='сутки']")
