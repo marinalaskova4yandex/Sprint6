@@ -1,11 +1,15 @@
-class TestConstants:
-    """Глобальные константы для тестовой среды"""
+class Urls:
+    """Адреса тестируемых окружений и внешних ресурсов"""
     BASE_URL = "https://qa-scooter.praktikum-services.ru/"
     DZEN_URL = "https://dzen.ru/"
-    
-    # Таймауты для WebDriverWait
-    TIMEOUT_DEFAULT = 7
-    TIMEOUT_SHORT = 3
-    
-    # Ожидаемые эталоны текстов для проверок
+
+
+class Timeouts:
+    """Таймауты для явных ожиданий WebDriverWait"""
+    DEFAULT = 7
+    SHORT = 3
+
+
+class ExpectedTexts:
+    """Эталонные строки для валидации результатов в ассертах"""
     ORDER_CONFIRMED_MARKER = "Заказ оформлен"

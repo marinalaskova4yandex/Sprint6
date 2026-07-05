@@ -5,19 +5,22 @@ from pages.base_page import BasePage
 from locators import OrderLocators
 
 class OrderPage(BasePage):
-    @allure.step("Заполнить поле Станция метро через клавиатуру")
-    def send_keys_to_station_field(self, station):
-        station_input = self.wait_for_element(OrderLocators.STATION__FIELD)
+    @allure.step("Заполнить первую форму заказа: Имя={name}, Фамилия={surname}, Адрес={address}, Метро={station}, Телефон={phone}")
+    def fill_personal_data_form(self, name, surname, address, station, phone):
+        self.send_keys_to_field(OrderLocators.NAME_FIELD, name)
+        self.send_keys_to_field(OrderLocators.SURNAME_FIELD, surname)
+        self.send_keys_to_field(OrderLocators.ADDRESS_FIELD, address)
+        self.select_metro_station(station)
+        self.send_keys_to_field(OrderLocators.PHONE_FIELD, phone)
+        self.click_element(OrderLocators.NEXT_BUTTON)
+
+    def select_metro_station(self, station):
+        station_input = self.wait_for_element_presence(OrderLocators.STATION__FIELD)
         self.click_element(OrderLocators.STATION__FIELD)
         station_input.send_keys(station)
         
-        # Замена слипа: ждем, пока элемент выпадающего списка станет видимым/активным
-        dropdown = self.wait_for_element(OrderLocators.STATION_DROPDOWN_LIST)
+        dropdown = self.wait_for_element_presence(OrderLocators.STATION_DROPDOWN_LIST)
         self.wait.until(EC.element_to_be_clickable(dropdown))
         
         station_input.send_keys(Keys.DOWN)
         station_input.send_keys(Keys.ENTER)
-
-    @allure.step("Нажать кнопку 'Далее'")
-    def click_next(self):
-        self.click_element(OrderLocators.NEXT_BUTTON)

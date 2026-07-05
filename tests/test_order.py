@@ -3,89 +3,46 @@ import allure
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
 from pages.rent_page import RentPage
-from locators import OrderLocators, MainPageLocators, RentPageLocators
-from constants import TestConstants
+from locators import RentPageLocators
+from constants import ExpectedTexts, Urls
 
-@allure.suite("Спринт 6: Позитивные UI-сценарии и переходы")
+@allure.suite("Позитивные UI-сценарии оформления заказов")
 class TestOrderScooterFlow:
 
-    @allure.title("Заказ самоката через точку входа: {entry_point}")
-    @allure.description("Проверяем полное оформление заказа. Маркер успеха ожидается внутри ассерта.")
-    @pytest.mark.parametrize(
-        "entry_point, button_order, name, surname, address, station, duration, phone, date, comment",
-        [
-            ("HEADER", MainPageLocators.HEADER_ORDER_BUTTON, "Иван", "Иванов", "ул. Ленина, 5", "Черкизовская", RentPageLocators.DURATION_TWO_DAYS, "79991112233", "12.12.2026", "Скорее"),
-            ("FOOTER", MainPageLocators.FOOTER_ORDER_BUTTON, "Анна", "Петрова", "ул. Мира, 10", "Сокольники", RentPageLocators.DURATION_ONE_DAY, "79110005566", "15.12.2026", "Жду")
-        ]
-    )
-    def test_order_scooter_success_flow(self, driver, entry_point, button_order, name, surname, address, station, duration, phone, date, comment):
+    @allure.title("Заказ самоката через верхнюю точку входа (Шапка сайта)")
+    @allure.description("Проверяем успешный сквозной заказ при клике на кнопку в хедере страницы")
+    def test_order_scooter_via_header_button(self, driver):
         main_page = MainPage(driver)
         order_page = OrderPage(driver)
         rent_page = RentPage(driver)
         
-        main_page.open()
+        main_page.open_base_url()
         main_page.accept_cookies()
+        main_page.click_header_order_button_via_actions()
         
-        # Исправлено: Физические клики мыши через ActionChains для обеих точек входа
-        from selenium.webdriver.common.action_chains import ActionChains
-        
-        if entry_point == "HEADER":
-            order_btn = main_page.wait_for_element(button_order)
-            actions = ActionChains(driver)
-            actions.move_to_element(order_btn).click().perform()
-        else:
-            main_page.scroll_to_element(button_order)
-            order_btn = main_page.wait_for_element(button_order)
-            actions = ActionChains(driver)
-            actions.move_to_element(order_btn).click().perform()
-            
-        order_page.send_keys_to_field(OrderLocators.NAME_FIELD, name)
-        order_page.send_keys_to_field(OrderLocators.SURNAME_FIELD, surname)
-        order_page.send_keys_to_field(OrderLocators.ADDRESS_FIELD, address)
-        order_page.send_keys_to_station_field(station)
-        order_page.send_keys_to_field(OrderLocators.PHONE_FIELD, phone)
-        order_page.click_next()
-        
-        rent_page.fill_rent_data(date, duration, comment)
+        order_page.fill_personal_data_form("Иван", "Иванов", "ул. Ленина, 5", "Черкизовская", "79991112233")
+        rent_page.fill_rent_data_form("12.12.2026", RentPageLocators.DURATION_TWO_DAYS, "Скорее")
         rent_page.confirm_order()
         
-        # Однозначный ассерт. Взаимодействие с маркером успеха происходит прямо внутри проверки
-        actual_popup_text = rent_page.get_order_confirmation_text()
-        assert TestConstants.ORDER_CONFIRMED_MARKER in actual_popup_text, (
-            f"Ошибка! Текст '{TestConstants.ORDER_CONFIRMED_MARKER}' не найден в попапе. Получено: '{actual_popup_text}'"
+        assert ExpectedTexts.ORDER_CONFIRMED_MARKER in rent_page.wait_and_get_order_confirmation_text(), (
+            f"Ошибка! Маркер '{ExpectedTexts.ORDER_CONFIRMED_MARKER}' отсутствует в финальном попапе подтверждения."
         )
 
-    @allure.title("Тест логотипа Самоката: Возврат на главную страницу")
-    @allure.description("Атомарный тест: клик по логотипу 'Самокат' из формы заказа должен возвращать на корневой URL")
-    def test_click_scooter_logo_returns_to_home_page(self, driver):
+    @allure.title("Заказ самоката через нижнюю точку входа (Футер сайта)")
+    @allure.description("Проверяем успешный сквозной заказ при клике на кнопку внизу страницы")
+    def test_order_scooter_via_footer_button(self, driver):
         main_page = MainPage(driver)
-        main_page.open()
+        order_page = OrderPage(driver)
+        rent_page = RentPage(driver)
+        
+        main_page.open_base_url()
         main_page.accept_cookies()
-        main_page.click_element(MainPageLocators.HEADER_ORDER_BUTTON)
+        main_page.click_footer_order_button_via_actions()
         
-        main_page.click_element(MainPageLocators.SCOOTER_LOGO)
+        order_page.fill_personal_data_form("Анна", "Петрова", "ул. Мира, 10", "Сокольники", "79110005566")
+        rent_page.fill_rent_data_form("15.12.2026", RentPageLocators.DURATION_ONE_DAY, "Жду")
+        rent_page.confirm_order()
         
-        main_page.wait_until_url_contains(TestConstants.BASE_URL)
-        assert main_page.get_current_url() == TestConstants.BASE_URL, "Логотип не вернул пользователя на главную страницу!"
-
-    @allure.title("Тест логотипа Яндекса: Перенаправление на Дзен")
-    @allure.description("Атомарный тест: проверка перехода на Дзен в новой вкладке при клике на логотип Яндекса")
-    def test_click_yandex_logo_opens_dzen(self, driver):
-        main_page = MainPage(driver)
-        main_page.open()
-        main_page.accept_cookies()
-        
-        from selenium.webdriver.common.action_chains import ActionChains
-        
-        # Используем локатор картинки из класса MainPageLocators
-        ya_logo_img = main_page.wait_for_element(MainPageLocators.YANDEX_LOGO_IMAGE)
-        
-        # Физический клик мыши через ActionChains
-        actions = ActionChains(driver)
-        actions.move_to_element(ya_logo_img).click().perform()
-        
-        main_page.switch_to_next_tab()
-        main_page.wait_until_url_contains(TestConstants.DZEN_URL)
-            
-        current_url = main_page.get_current_url()
-        assert TestConstants.DZEN_URL in current_url, f"Логика перехода нарушена! Ожидали: {TestConstants.DZEN_URL}, получили: {current_url}"
+        assert ExpectedTexts.ORDER_CONFIRMED_MARKER in rent_page.wait_and_get_order_confirmation_text(), (
+            f"Ошибка! Маркер '{ExpectedTexts.ORDER_CONFIRMED_MARKER}' отсутствует в финальном попапе подтверждения."
+        )

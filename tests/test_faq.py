@@ -4,7 +4,6 @@ from pages.main_page import MainPage
 
 @allure.suite("Спринт 6: Проверка главной страницы сервиса «Самокат»")
 class TestMainPage:
-
     @allure.title("Тест FAQ: Вопрос и ответ № {index}")
     @allure.description("Проверяем, что при клике на стрелочку текст ответа раскрывается и совпадает с эталоном")
     @pytest.mark.parametrize(
@@ -22,7 +21,8 @@ class TestMainPage:
     )
     def test_faq_dropdown_items(self, driver, index, expected_answer):
         main_page = MainPage(driver)
-        main_page.open()
+                
+        main_page.open_base_url()
         main_page.accept_cookies()
         main_page.scroll_to_faq_block()
         main_page.expand_faq_question(index)
@@ -31,5 +31,3 @@ class TestMainPage:
         assert actual_answer == expected_answer, (
             f"Ошибка на индексе {index}!\nОжидали: '{expected_answer}'\nПолучили: '{actual_answer}'"
         )
-
-    
